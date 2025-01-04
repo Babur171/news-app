@@ -42,7 +42,9 @@ const NewsItems = ({ item }) => {
           </small>
         </div>
       </div>
+
     </a>
+    
   );
 };
 
