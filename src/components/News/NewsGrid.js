@@ -1,17 +1,25 @@
 import React from "react";
 import NewsItems from "../NewsItem/NewsItems";
+import { Row, Col } from "react-bootstrap";  // Import Row and Col from react-bootstrap
 import "./NewsGrid.css";
-const NewsGrid = ({ items }) => {
-  // if (!items || items.length === 0) {
-  //   return <p>No news available</p>; // Optionally display a message when no items are available
-  // }
+import DateFilter from '../filter/DateFilter';
+import Source from "../filter/Source";
 
+const NewsGrid = ({ items }) => {
   return (
-    <div className="news-grid">
-      {items.map((item, index) => (
-        <NewsItems key={index} item={item} />
-      ))}
+    <>  
+     <div className="d-flex align-items-center gap-5 mb-3">
+      <DateFilter />
+      <Source />
     </div>
+
+      <div className="news-grid">
+        {items.map((item, index) => (
+          <NewsItems key={index} item={item} />
+        ))}
+      </div>
+    </>
   );
 };
+
 export default NewsGrid;
