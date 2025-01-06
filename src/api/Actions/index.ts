@@ -1,4 +1,8 @@
-import api from "../Config/index";
+import api, {
+  guardianInstance,
+  newsAPIInstance,
+  openNewsInstance,
+} from "../Config/index";
 
 // export const getSingleCourtsApi = async (id: number, userId: number) => {
 //   try {
@@ -11,17 +15,21 @@ import api from "../Config/index";
 //   }
 // };
 
-export const getNewsAPI = async (payload: any) => {
+export const fetchArticles = async (query) => {
   try {
-    const { search, sort, location, page, sport } = payload;
-    const url = `/courts/?search=${search}&sort=${
-      sort || ""
-    }?sports=17&page=${page}&filter=512`;
+    const [newsAPI, openNews, guardian] = await Promise.all([
+      api.get(newsAPIInstance, `/everything?q=${query}`),
+      api.get(openNewsInstance, `/articles?q=${query}`),
+      api.get(guardianInstance, `/search?q=${query}`),
+    ]);
 
-    const sportURL = url;
-    const response = api.get(sportURL);
-    return (await response).data;
+    // Combining the results from different APIs
+    return [
+      ...newsAPI.data?.articles,
+      ...openNews.data?.articles,
+      ...guardian.data?.response.results,
+    ];
   } catch (error) {
-    throw error;
+    return [];
   }
 };
