@@ -1,6 +1,6 @@
 // useExploreQuery.js
 
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchArticles } from "./apiServices";
 
 export function useNewsQuery({ searchText = "", filters }) {
@@ -17,7 +17,7 @@ export function useNewsQuery({ searchText = "", filters }) {
     queryFn: ({ pageParam }) =>
       fetchArticles({
         query: searchText || "tech",
-        filters: { ...filters, page: pageParam },
+        filters: { ...filters },
       }),
     getNextPageParam: (lastPage) => {
       return lastPage?.next ? lastPage?.current_page_number + 1 : undefined;

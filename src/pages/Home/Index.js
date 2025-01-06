@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import "./SearchPage.css"; // Import CSS for styling
-import "./Style.css";
+import "./style.css";
 import img1 from "../../assets/Dont-be-late-Myra.jpg";
 import img2 from "../../assets/Manmohan-Singh.jpg";
 import img3 from "../../assets/MBL4154.jpg";
+import NewsItems from "../../components/NewsItem/index";
+import { categoryList, dateList } from "../../utils";
+import { useNewsQuery } from "../../api/useNewsQuery";
 const dummyData = [
   {
     id: 1,
@@ -43,12 +46,23 @@ const dummyData = [
   },
 ];
 
-const Index = () => {
+const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(dummyData);
   const [selectedDate, setSelectedDate] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedSource, setSelectedSource] = useState("All");
+
+  const { getNews, newsData, isLoading } = useNewsQuery({
+    searchText: "",
+    filters: {},
+  });
+
+  useEffect(() => {
+    getNews();
+  }, []);
+
+  console.log("newsDatanewsData", newsData);
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -104,8 +118,6 @@ const Index = () => {
           />
           <button onClick={handleSearch}>Go</button>
         </div>
-
-        <div className="hr">Showing results 1 - 10 of 1,292 for pakistan</div>
       </div>
 
       <div className="content">
@@ -113,39 +125,30 @@ const Index = () => {
         <div className="filters">
           {/* Date Filter */}
           <div>
-            <h4>Date Filter</h4>
-            {["All", "Past 24 Hours", "Past 7 Days", "Past 30 Days"].map(
-              (date, index) => (
-                <label key={index} className="d-block">
-                  <input
-                    type="radio"
-                    value={date}
-                    checked={selectedDate === date}
-                    onChange={() => {
-                      setSelectedDate(date);
-                      handleFilterChange();
-                    }}
-                    style={{ marginInline: 5 }}
-                  />
+            <h4 className="hedingStyle">Date Filter</h4>
+            {dateList.map((date, index) => (
+              <label key={index} className="d-block">
+                <input
+                  type="radio"
+                  value={date.value}
+                  checked={selectedDate === date.value}
+                  onChange={() => {
+                    setSelectedDate(date?.value);
+                    handleFilterChange();
+                  }}
+                  style={{ marginInline: 5 }}
+                />
 
-                  {date}
-                </label>
-              )
-            )}
+                {date?.label}
+              </label>
+            ))}
           </div>
 
           {/* Category Filter */}
           {/* Category Filter */}
           <div>
-            <h4>Category</h4>
-            {[
-              "Technology",
-              "Entertainment",
-              "Science",
-              "Health",
-              "Sports",
-              "Business",
-            ].map((category, index) => (
+            <h4 className="hedingStyle">Category</h4>
+            {categoryList.map((category, index) => (
               <label key={index} className="d-block">
                 <input
                   type="checkbox"
@@ -164,7 +167,7 @@ const Index = () => {
 
           {/* Source Filter */}
           <div>
-            <h4>Source</h4>
+            <h4 className="hedingStyle">Source</h4>
             {["All", "BBC", "CNN", "ESPN"].map((source, index) => (
               <label key={index} className="d-block">
                 <input
@@ -187,21 +190,8 @@ const Index = () => {
         {/* Right Side - News Column */}
         <div className="news-column">
           {filteredData.length > 0 ? (
-            filteredData.map((item) => (
-              <div key={item.id} className="news-card">
-                <img src={item.image} alt={item.heading} />
-                <div className="news-content">
-                  <h3 style={{ paddingBottom: 8 }}>{item.heading}</h3>
-                  <span> {item.author}</span>
-
-                  <div className="news-meta">
-                    <span> {item.date}</span>
-                    <span> {item.source}</span>
-                  </div>
-                  <p>{item.description}</p>
-                  {/* <p> {item.source}</p> */}
-                </div>
-              </div>
+            filteredData.map((item, index) => (
+              <NewsItems item={item} key={index.toString()} />
             ))
           ) : (
             <p>No results found.</p>
@@ -212,4 +202,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Home;

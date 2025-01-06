@@ -48,15 +48,16 @@ export const fetchArticles = async ({ query = "tech", filters = {} }) => {
     // Concurrently fetch articles from all APIs
     const [newsAPI, openNews, guardian] = await Promise.all([
       newsAPIInstance.get(`/everything?${newsAPIParams}`),
-      openNewsInstance.get(`/articles?${openNewsParams}`),
+      // openNewsInstance.get(`/articles?${openNewsParams}`),
       guardianInstance.get(`/search?${guardianParams}`),
     ]);
+    console.log("guardianguardian", guardian);
 
     // Combine and return the results
     return [
       ...(newsAPI.data?.articles || []),
-      ...(openNews.data?.articles || []),
-      ...(guardian.data?.response?.results || []),
+      // ...(openNews.data?.articles || []),
+      // ...(guardian.data?.response?.results || []),
     ];
   } catch (error) {
     console.error("Error fetching articles:", error);
