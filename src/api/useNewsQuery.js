@@ -1,13 +1,9 @@
 // useExploreQuery.js
 
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchArticles } from "../Actions/index";
+import { fetchArticles } from "./apiServices";
 
-interface UseExploreQueryProps {
-  searchText?: string;
-}
-
-export function useExploreQuery({ searchText }: UseExploreQueryProps) {
+export function useNewsQuery({ searchText = "", filters }) {
   const {
     refetch: getNews,
     isLoading,
@@ -18,7 +14,11 @@ export function useExploreQuery({ searchText }: UseExploreQueryProps) {
   } = useInfiniteQuery({
     queryKey: ["getNews", searchText],
     initialPageParam: 1,
-    queryFn: ({ pageParam }) => fetchArticles(searchText || ""),
+    queryFn: ({ pageParam }) =>
+      fetchArticles({
+        query: searchText || "tech",
+        filters: { ...filters, page: pageParam },
+      }),
     getNextPageParam: (lastPage) => {
       return lastPage?.next ? lastPage?.current_page_number + 1 : undefined;
     },

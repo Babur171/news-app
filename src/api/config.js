@@ -1,22 +1,22 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import axios from "axios";
 
 export const BASE_URL = "BASE_URL";
 
-export const newsAPIInstance: AxiosInstance = axios.create({
+export const newsAPIInstance = axios.create({
   baseURL: "https://newsapi.org/v2",
   headers: {
     "Content-Type": "application/json",
     Authorization: "Bearer YOUR_NEWSAPI_KEY",
   },
 });
-export const openNewsInstance: AxiosInstance = axios.create({
+export const openNewsInstance = axios.create({
   baseURL: "https://opennewsapi.com/v1",
   headers: {
     "Content-Type": "application/json",
     Authorization: "Bearer YOUR_OPENNEWS_API_KEY",
   },
 });
-export const guardianInstance: AxiosInstance = axios.create({
+export const guardianInstance = axios.create({
   baseURL: "https://content.guardianapis.com",
   headers: {
     "Content-Type": "application/json",
@@ -24,10 +24,10 @@ export const guardianInstance: AxiosInstance = axios.create({
   },
 });
 const api = {
-  request(instance: AxiosInstance, config: AxiosRequestConfig = {}) {
+  request(instance, config) {
     return instance.request(config);
   },
-  get(instance: AxiosInstance, url: string, config: AxiosRequestConfig = {}) {
+  get(instance, url, config) {
     return instance.get(`${url}`, config);
   },
   pageSize: 999999,
