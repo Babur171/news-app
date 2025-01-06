@@ -1,32 +1,13 @@
-import React, { useState } from 'react';
-import Dropdown from 'react-bootstrap/Dropdown';
+import React from "react";
 
-const DateFilter = () => {
-  const [selectedOption, setSelectedOption] = useState('All');
-
-  const options = [
-    'All',
-    'Past 24 Hours',
-    'Past 7 Days',
-    'Past 30 Days',
-    'Past 12 Months'
-  ];
-
+const DateFilter = ({ setSelectedDate }) => {
   return (
-      <Dropdown>
-	  <h3 style={{fontSize:24}}>Date Filter</h3>
-        <Dropdown.Toggle variant="success" id="dropdown-basic" >
-          {selectedOption}
-        </Dropdown.Toggle>
-
-        <Dropdown.Menu>
-          {options.map((option, index) => (
-            <Dropdown.Item key={index} onClick={() => setSelectedOption(option)}>
-              {option}
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
+    <select onChange={(e) => setSelectedDate(e.target.value)}>
+      <option value="All">All Dates</option>
+      <option value="Past 24 Hours">Past 24 Hours</option>
+      <option value="Past 7 Days">Past 7 Days</option>
+      <option value="Past 30 Days">Past 30 Days</option>
+    </select>
   );
 };
 
