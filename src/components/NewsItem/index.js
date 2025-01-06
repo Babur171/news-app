@@ -1,6 +1,7 @@
 import React from "react";
 import "./style.css";
 const NewsItems = ({ item }) => {
+  console.log(item)
   return (
     <>
       <div className="news-card">
