@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Menu from "./components/Menu/Menu";
 import NewsGrid from "./components/News/NewsGrid";
 import "./App.css";
+
 const App = () => {
   const [items, setItems] = useState([]);
   const [active, setActive] = useState(1);
