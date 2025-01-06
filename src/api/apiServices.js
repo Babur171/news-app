@@ -1,10 +1,7 @@
 import { guardianInstance, newsAPIInstance, openNewsInstance } from "./config";
 
-export const fetchArticles = async ({ query = "tech", filters = {} }) => {
+export const fetchArticles = async ({ query = "", filters = {} }) => {
   try {
-    // console.log("processprocess", process);
-
-    // Get API keys from environment variables
     const apiKeys = {
       newsAPI: "6f1dc3d58418487a8d9ea0a45ae963be" || "",
       openNews: "d7bf5c4c-f6ac-4248-8d78-5de8af178963" || "",
@@ -46,18 +43,18 @@ export const fetchArticles = async ({ query = "tech", filters = {} }) => {
     });
 
     // Concurrently fetch articles from all APIs
-    const [newsAPI, openNews, guardian] = await Promise.all([
+    const [newsAPI, guardian] = await Promise.all([
       newsAPIInstance.get(`/everything?${newsAPIParams}`),
-      // openNewsInstance.get(`/articles?${openNewsParams}`),
       guardianInstance.get(`/search?${guardianParams}`),
+      // openNewsInstance.get(`/articles?${openNewsParams}`),
     ]);
     console.log("guardianguardian", guardian);
 
     // Combine and return the results
     return [
       ...(newsAPI.data?.articles || []),
+      ...(guardian.data?.response?.results || []),
       // ...(openNews.data?.articles || []),
-      // ...(guardian.data?.response?.results || []),
     ];
   } catch (error) {
     console.error("Error fetching articles:", error);

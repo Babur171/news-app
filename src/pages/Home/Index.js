@@ -1,76 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 // import "./SearchPage.css"; // Import CSS for styling
 import "./style.css";
-import img1 from "../../assets/Dont-be-late-Myra.jpg";
-import img2 from "../../assets/Manmohan-Singh.jpg";
-import img3 from "../../assets/MBL4154.jpg";
 import NewsItems from "../../components/NewsItem/index";
-import { categoryList, dateList } from "../../utils";
+import { categoryList, dateList, getDateRange } from "../../utils";
 import { useNewsQuery } from "../../api/useNewsQuery";
-const dummyData = [
-  {
-    id: 1,
-    heading:
-      "Manmohan Singh, Architect of Modern India’s Economic Reforms and Former Prime Minister, Dies at 92",
-    author: "John Doe",
-    date: "2024-01-01",
-    image: img1,
-    description:
-      "Manmohan Singh, India’s 13th Prime Minister and a pivotal figure in the country’s economic transformation, died in a New Delhi hospital on Dec. 26 of age-related medical conditions. He was 92. Singh served as Prime Minister from 2004 to 2014, leading…",
-    source: "BBC",
-    category: "World",
-  },
-  {
-    id: 2,
-    heading:
-      "RASA Film Group Expands Partners, Details Robust Slate (EXCLUSIVE)",
-    author: "Jane Smith",
-    date: "2024-01-02",
-    image: img2,
-    description:
-      "Manmohan Singh, India’s 13th Prime Minister and a pivotal figure in the country’s economic transformation, died in a New Delhi hospital on Dec. 26 of age-related medical conditions. He was 92. Singh served as Prime Minister from 2004 to 2014, leading…",
-    source: "CNN",
-    category: "Tech",
-  },
-  {
-    id: 3,
-    heading:
-      "Beta Fiction, Spain’s No. 1 Independent Distributor in 2024, Sets New Films by ‘El 47’s’ Marcel Barrena and ‘House on Fire’s’ Dani de la Orden (EXCLUSIVE)",
-    author: "Mark Taylor",
-    date: "2024-01-03",
-    image: img3,
-    description:
-      "Manmohan Singh, India’s 13th Prime Minister and a pivotal figure in the country’s economic transformation, died in a New Delhi hospital on Dec. 26 of age-related medical conditions. He was 92. Singh served as Prime Minister from 2004 to 2014, leading…",
-    source: "ESPN",
-    category: "Sports",
-  },
-];
+import { debounce } from "lodash";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState(dummyData);
-  const [selectedDate, setSelectedDate] = useState("All");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedSource, setSelectedSource] = useState("All");
+  const [filteredData, setFilteredData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedSource, setSelectedSource] = useState("all");
 
   const { getNews, newsData, isLoading } = useNewsQuery({
-    searchText: "",
-    filters: {},
+    searchText: searchTerm,
+    filters: {
+      from: selectedDate === "all" ? "" : getDateRange(selectedDate)?.from,
+      to: selectedDate === "all" ? "" : getDateRange(selectedDate)?.to,
+      category: selectedCategory === "all" ? "" : selectedCategory,
+      sources: selectedSource === "all" ? "" : selectedSource,
+    },
   });
 
   useEffect(() => {
     getNews();
   }, []);
 
-  console.log("newsDatanewsData", newsData);
+  const fetchSearchResults = useCallback(
+    debounce(async (searchTerm) => {
+      getNews(searchTerm);
+    }, 500),
+    []
+  );
 
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    const filtered = dummyData.filter((item) =>
-      item.heading.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredData(filtered);
+    fetchSearchResults(value);
+  };
+
+  const submit = (e) => {
+    getNews();
   };
 
   const handleCategoryChange = (category) => {
@@ -83,15 +54,16 @@ const Home = () => {
   };
 
   const handleFilterChange = () => {
-    let filtered = dummyData.filter((item) => {
-      return (
-        (selectedDate === "All" || item.date.includes(selectedDate)) &&
-        (selectedCategory.length === 0 ||
-          selectedCategory.includes(item.category)) &&
-        (selectedSource === "All" || item.source === selectedSource)
-      );
-    });
-    setFilteredData(filtered);
+    getNews();
+    // let filtered = dummyData.filter((item) => {
+    //   return (
+    //     (selectedDate === "All" || item.date.includes(selectedDate)) &&
+    //     (selectedCategory.length === 0 ||
+    //       selectedCategory.includes(item.category)) &&
+    //     (selectedSource === "All" || item.source === selectedSource)
+    //   );
+    // });
+    // setFilteredData(filtered);
   };
 
   return (
@@ -113,10 +85,10 @@ const Home = () => {
             type="text"
             placeholder="Search News..."
             value={searchTerm}
-            onChange={handleSearch}
+            onChange={(e) => handleSearch(e)}
             className="search-bar"
           />
-          <button onClick={handleSearch}>Go</button>
+          <button onClick={() => submit()}>Go</button>
         </div>
       </div>
 
@@ -189,8 +161,8 @@ const Home = () => {
 
         {/* Right Side - News Column */}
         <div className="news-column">
-          {filteredData.length > 0 ? (
-            filteredData.map((item, index) => (
+          {newsData?.length > 0 ? (
+            newsData?.map((item, index) => (
               <NewsItems item={item} key={index.toString()} />
             ))
           ) : (

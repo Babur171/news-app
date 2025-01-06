@@ -3,15 +3,20 @@ import "./style.css";
 const NewsItems = ({ item }) => {
   return (
     <>
-      <div key={item.id} className="news-card">
-        <img src={item.image} alt={item.heading} />
+      <div className="news-card">
+        {item?.urlToImage && (
+          <img
+            src={item?.urlToImage || item?.urlToImage}
+            alt={item?.title || item?.webTitle}
+          />
+        )}
         <div className="news-content">
-          <h4 className="newHeading">{item.heading}</h4>
-          <span> {item.author}</span>
+          <h4 className="newHeading">{item?.title || item?.webTitle}</h4>
+          {item?.author && <span> {item?.author}</span>}
 
           <div className="news-meta">
-            <span> {item.date}</span>
-            <span> {item.source}</span>
+            <span> {item?.webPublicationDate || item?.publishedAt}</span>
+            {/* <span> {item.source}</span> */}
           </div>
           <p className="descriptionNews">{item.description}</p>
           {/* <p> {item.source}</p> */}
