@@ -5,6 +5,7 @@ import "./App.css";
 
 // import Index from "./pages/search/Index";
 import Index from './pages/search/Index'
+import SinglePage from "./components/singlepage/SinglePage";
 // import SearchPage from "./pages/search/Index";
 
 const App = () => {
@@ -27,7 +28,8 @@ const App = () => {
   return (
     <>
       <div className="app">
-       <Index/>
+       {/* <Index/> */}
+       <SinglePage/>
       
         {/* <h1 style={{ textAlign: "center", marginBottom: "5%" }}>
           See The Latest News
