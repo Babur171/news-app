@@ -46,7 +46,7 @@ You must choose at least **Three** of the following APIs to fetch news articles:
 
 ### Install Dependencies
 
-npm install or yarn install
+`npm install` or `yarn install`
 
 ### `npm start`
 
