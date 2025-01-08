@@ -7,8 +7,6 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 
 const App = () => {
-  console.log("processss", process.env);
-
   const queryClient = new QueryClient();
 
   return (

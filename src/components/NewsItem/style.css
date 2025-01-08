@@ -20,14 +20,14 @@ body {
 .newHeading {
   padding-bottom: 8px;
   font-family: Arial, sans-serif;
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 700;
   text-decoration: none;
 }
 
 .descriptionNews {
   font-family: Arial, sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   line-height: 1.5;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -51,7 +51,7 @@ body {
   /* flex: 1; */
 }
 
-.news-meta  {
+.news-meta {
   /* display: flex; */
   /* justify-content: flex-start; */
   /* gap: 10px; */
@@ -74,6 +74,4 @@ body {
     max-width: 100%;
     height: auto;
   }
-
-  
 }
