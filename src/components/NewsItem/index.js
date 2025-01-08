@@ -1,7 +1,9 @@
 import React from "react";
 import "./style.css";
+import moment from "moment";
+
 const NewsItems = ({ item }) => {
-  console.log(item)
+  console.log(item);
   return (
     <>
       <div className="news-card">
@@ -16,7 +18,10 @@ const NewsItems = ({ item }) => {
           {item?.author && <span> {item?.author}</span>}
 
           <div className="news-meta">
-            <span> {item?.webPublicationDate || item?.publishedAt}</span>
+            <span>
+              {moment(item?.webPublicationDate).format("YYYY-MM-DD") ||
+                moment(item?.publishedAt).format("YYYY-MM-DD")}
+            </span>
             {/* <span> {item.source}</span> */}
           </div>
           <p className="descriptionNews">{item.description}</p>

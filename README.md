@@ -20,6 +20,10 @@ You must choose at least **two** of the following APIs to fetch news articles:
 - git clone https://github.com/Babur171/news-app.git
 - cd news-app
 
+## Set Up Environment Variables
+
+- Change a **.env.example** into **.env** file in the root directory
+
 ## Docker Build and Running Docker Container
 
 **Build Image and run Docker Container**

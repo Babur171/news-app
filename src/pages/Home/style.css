@@ -67,28 +67,41 @@ button:hover {
 
 /* Left Side Filters Section */
 .filters {
-  flex: 1;
   max-width: 250px;
 }
 
 /* Right Side News Section */
 .news-column {
-  /* flex: 3; */
   display: flex;
   flex-direction: column;
   gap: 20px;
+  flex: 1;
+}
+
+.news-loader {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Date Filter Styling */
 .date-filter-container {
   max-width: 250px;
   margin-bottom: 20px;
+  display: flex;
+  flex: 1;
 }
 
 .date-input-group {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+.date-input {
+  display: flex;
+  flex-direction: column;
 }
 
 .date-input label {
@@ -98,14 +111,14 @@ button:hover {
 /* Responsive Design */
 @media (max-width: 768px) {
   .content {
-      flex-direction: column;
+    flex-direction: column;
   }
 
   .filters {
-      max-width: 100%;
+    max-width: 100%;
   }
 
   .news-column {
-      padding-left: 0;
+    padding-left: 0;
   }
 }

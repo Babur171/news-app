@@ -3,9 +3,9 @@ import { guardianInstance, newsAPIInstance } from "./config";
 export const fetchArticles = async ({ query = "", filters = {} }) => {
   try {
     const apiKeys = {
-      newsAPI: "89a1860ec42b49a5839fb8aceb4c7d6d" || "",
-      openNews: "d7bf5c4c-f6ac-4248-8d78-5de8af178963" || "",
-      guardian: "d7bf5c4c-f6ac-4248-8d78-5de8af178963" || "",
+      newsAPI: process.env.REACT_APP_NEWSAPI_KEY || "",
+      openNews: process.env.REACT_APP_NEWSAPI_KEY || "",
+      guardian: process.env.REACT_APP_GUARDIAN_API_KEY || "",
     };
 
     if (!apiKeys.newsAPI || !apiKeys.openNews || !apiKeys.guardian) {

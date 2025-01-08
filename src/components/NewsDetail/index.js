@@ -1,5 +1,5 @@
 import React from "react";
-import "./Singlepage.css";
+import "./style.css";
 import img1 from "../../assets/srccon_2023_giving.jpg";
 
 const SinglePage = () => {

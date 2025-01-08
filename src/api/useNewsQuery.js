@@ -15,7 +15,6 @@ export function useNewsQuery({ searchText = "", filters }) {
         query: searchText || "t",
         filters: { ...filters },
       }),
-
     retry: false,
     enabled: false,
   });
