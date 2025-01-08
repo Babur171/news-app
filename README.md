@@ -4,7 +4,7 @@ Welcome to the **Frontend Web Developer Take-Home Challenge**! This project invo
 
 ## Data Sources
 
-You must choose at least **three** of the following APIs to fetch news articles:
+You must choose at least **two** of the following APIs to fetch news articles:
 
 - [NewsAPI](https://newsapi.org/)
 - [The Guardian API](https://open-platform.theguardian.com/documentation/)
@@ -17,10 +17,20 @@ You must choose at least **three** of the following APIs to fetch news articles:
 
 ### 1. Clone the Repository
 
-git clone https://github.com/Babur171/news-app.git
-cd news-app
+- git clone https://github.com/Babur171/news-app.git
+- cd news-app
 
-In the project directory, you can run:
+## Docker Build and Running the Project
+
+Build Image and run Docker Container
+
+- docker compose up
+
+### Install Dependencies
+
+npm install or yarn install
+
+## In the project directory, you can run:
 
 ### `npm start`
 
@@ -44,7 +54,3 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-```
-
-```
