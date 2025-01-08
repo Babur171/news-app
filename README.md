@@ -22,24 +22,24 @@ You must choose at least **two** of the following APIs to fetch news articles:
 
 ## Set Up Environment Variables
 
-- Change a **.env.example** into **.env** file in the root directory
+- Change **.env.example** file into **.env** file in the root directory
 
 ## Docker Build and Running Docker Container
 
 **Build Image and run Docker Container**
 
-- docker compose up
+- `docker compose up`
   Runs the app in the development mode.\
   Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### OR Docker Setup and Running the Project
+## OR Docker Setup and Running the Project
 
 **Build the Docker Image**
 
-- docker build -t news-aggregator .
+- `docker build -t news-aggregator .`
 
 - Run the Docker Container
-  docker run -p 3000:3000 news-aggregator
+  `docker run -p 3000:3000 news-aggregator`
 
 ## In the project directory, you can run:
 
