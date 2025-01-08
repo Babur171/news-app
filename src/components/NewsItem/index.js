@@ -14,17 +14,22 @@ const NewsItems = ({ item }) => {
           />
         )}
         <div className="news-content">
-          <h4 className="newHeading">{item?.title || item?.webTitle}</h4>
+          <h4 className="newHeading">
+            {item?.title || item?.webTitle || item?.headline?.main}
+          </h4>
           {item?.author && <span> {item?.author}</span>}
 
           <div className="news-meta">
             <span>
               {moment(item?.webPublicationDate).format("YYYY-MM-DD") ||
-                moment(item?.publishedAt).format("YYYY-MM-DD")}
+                moment(item?.publishedAt).format("YYYY-MM-DD") ||
+                moment(item?.pub_date).format("YYYY-MM-DD")}
             </span>
             {/* <span> {item.source}</span> */}
           </div>
-          <p className="descriptionNews">{item.description}</p>
+          <p className="descriptionNews">
+            {item.description || item?.lead_paragraph}
+          </p>
           {/* <p> {item.source}</p> */}
         </div>
       </div>

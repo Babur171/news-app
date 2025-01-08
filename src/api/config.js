@@ -6,8 +6,8 @@ export const newsAPIInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
-export const openNewsInstance = axios.create({
-  baseURL: "https://opennewsapi.com/v1",
+export const newYorkNewsInstance = axios.create({
+  baseURL: "https://api.nytimes.com/svc/search/v2/articlesearch.json",
   headers: {
     "Content-Type": "application/json",
   },

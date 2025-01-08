@@ -1,24 +1,18 @@
+import moment from "moment";
+
 export const getPreviousMonthDate = () => {
   const today = new Date();
   const previousMonth = new Date(today);
   previousMonth.setMonth(today.getMonth() - 1);
-
-  const previousMonthFormatted =new  Date(previousMonth.toISOString().split('T')[0]);
-
+  const previousMonthFormatted = new Date(
+    previousMonth.toISOString().split("T")[0]
+  );
   return previousMonthFormatted;
 };
 
-export const getDateRange = (fromDate, toDate) => {
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
-  return fromDate && toDate
-    ? { from: formatDate(new Date(fromDate)), to: formatDate(new Date(toDate)) }
-    : null; // Return null if no dates are selected
+export const convertDate = (dateString) => {
+  // Parse the date string using moment and format it
+  return moment(dateString, "YYYY-MM-DD").format("YYYYMMDD");
 };
 
 export const categoryList = [

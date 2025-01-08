@@ -1,14 +1,19 @@
-import { guardianInstance, newsAPIInstance } from "./config";
+import { convertDate } from "../utils";
+import {
+  guardianInstance,
+  newsAPIInstance,
+  newYorkNewsInstance,
+} from "./config";
 
 export const fetchArticles = async ({ query = "", filters = {} }) => {
   try {
     const apiKeys = {
       newsAPI: process.env.REACT_APP_NEWSAPI_KEY || "",
-      openNews: process.env.REACT_APP_NEWSAPI_KEY || "",
+      newYork: process.env.REACT_APP_NEWYORK_API_KEY || "",
       guardian: process.env.REACT_APP_GUARDIAN_API_KEY || "",
     };
 
-    if (!apiKeys.newsAPI || !apiKeys.openNews || !apiKeys.guardian) {
+    if (!apiKeys.newsAPI || !apiKeys.newYork || !apiKeys.guardian) {
       throw new Error("Missing API keys in environment variables.");
     }
 
@@ -27,14 +32,8 @@ export const fetchArticles = async ({ query = "", filters = {} }) => {
       q: query,
       ...filters,
       sortBy: "publishedAt",
-      pageSize: 20, // Specify page size or fetch limit
-      apiKey: apiKeys.newsAPI, // Add NewsAPI key
-    });
-
-    const openNewsParams = buildQueryParams({
-      q: query,
-      ...filters,
-      apiKey: apiKeys.openNews, // Add OpenNews key
+      pageSize: 20,
+      apiKey: apiKeys.newsAPI,
     });
 
     const guardianParams = buildQueryParams({
@@ -46,19 +45,31 @@ export const fetchArticles = async ({ query = "", filters = {} }) => {
       "api-key": apiKeys.guardian,
     });
 
+    const newYorkParams = buildQueryParams({
+      q: query,
+      begin_date: convertDate(filters.from) || "", // Format: YYYYMMDD
+      end_date: convertDate(filters.to),
+      fq: filters.category ? `section_name:${filters?.category}` : "",
+      "api-key": apiKeys.newYork, // Add NewYork key
+    });
+
     // Concurrently fetch articles from all APIs using Promise.allSettled
-    const [newsAPIResult, guardianResult] = await Promise.allSettled([
-      newsAPIInstance.get(`/top-headlines?${newsAPIParams}`),
-      guardianInstance.get(
-        `/${
-          filters.category
-            ? filters.category === "sports"
-              ? "sport"
-              : filters.category
-            : "technology"
-        }?${guardianParams}`
-      ),
-    ]);
+    const [newsAPIResult, guardianResult, newYorkNewsResult] =
+      await Promise.allSettled([
+        newsAPIInstance.get(`/top-headlines?${newsAPIParams}`),
+        guardianInstance.get(
+          `/${
+            filters.category
+              ? filters.category === "sports"
+                ? "sport"
+                : filters.category === "health"
+                ? ""
+                : filters.category
+              : "technology"
+          }?${guardianParams}`
+        ),
+        newYorkNewsInstance.get(`?${newYorkParams}`),
+      ]);
 
     // Extract successful results and combine them
     const articles = [];
@@ -66,12 +77,36 @@ export const fetchArticles = async ({ query = "", filters = {} }) => {
       articles.push(...(newsAPIResult.value.data?.articles || []));
     }
 
+    if (newYorkNewsResult.status === "fulfilled") {
+      const articlesWithImages =
+        newYorkNewsResult?.value.data?.response?.docs?.map((article) => {
+          const multimedia = article.multimedia || [];
+          const imageObject = multimedia.find(
+            (media) => media.subtype === "xlarge" // Choose the subtype or other criteria
+          );
+
+          return {
+            ...article,
+            urlToImage: imageObject
+              ? `https://www.nytimes.com/${imageObject?.url}` // Construct full URL
+              : null,
+          };
+        });
+
+      articles.push(...(articlesWithImages || []));
+    }
+
     // Check if guardianResult was successful
     if (guardianResult.status === "fulfilled") {
       articles.push(...(guardianResult.value.data?.response?.results || []));
     }
 
-    return articles;
+    const filteredArticles = articles.filter(
+      (article) =>
+        article.title !== "[Removed]" && article?.description !== "[Removed]"
+    );
+
+    return filteredArticles;
   } catch (error) {
     return [];
   }

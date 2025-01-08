@@ -4,10 +4,11 @@ Welcome to the **Frontend Web Developer Take-Home Challenge**! This project invo
 
 ## Data Sources
 
-You must choose at least **two** of the following APIs to fetch news articles:
+You must choose at least **Three** of the following APIs to fetch news articles:
 
 - [NewsAPI](https://newsapi.org/)
 - [The Guardian API](https://open-platform.theguardian.com/documentation/)
+- [The NewYork API](https://api.nytimes.com/)
 
 ## Prerequisites
 
