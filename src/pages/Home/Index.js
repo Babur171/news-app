@@ -1,25 +1,33 @@
-import React, { useCallback, useEffect, useState } from "react";
-// import "./SearchPage.css"; // Import CSS for styling
+import React, {  useCallback, useEffect, useState } from "react";
 import "./style.css";
 import NewsItems from "../../components/NewsItem/index";
-import { categoryList, dateList, getDateRange } from "../../utils";
+import { categoryList, getPreviousMonthDate, sourcesList } from "../../utils";
 import { useNewsQuery } from "../../api/useNewsQuery";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
+import moment from "moment";
 import { debounce } from "lodash";
+
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
-  const [selectedDate, setSelectedDate] = useState("all");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSource, setSelectedSource] = useState("all");
+  const [fromDate, setFromDate] = useState(new Date());
+  const [toDate, setToDate] = useState(new Date());
 
   const { getNews, newsData, isLoading } = useNewsQuery({
     searchText: searchTerm,
     filters: {
-      from: selectedDate === "all" ? "" : getDateRange(selectedDate)?.from,
-      to: selectedDate === "all" ? "" : getDateRange(selectedDate)?.to,
-      category: selectedCategory === "all" ? "" : selectedCategory,
-      sources: selectedSource === "all" ? "" : selectedSource,
+      from: moment(fromDate).format("YYYY-MM-DD"),
+      to: moment(toDate).format("YYYY-MM-DD"),
+      category: selectedCategory.toLocaleLowerCase(),
+      sources:
+        selectedSource === "all"
+          ? ""
+          : selectedSource.includes(" ")
+          ? selectedSource.toLowerCase().replace(/\s+/g, "-")
+          : selectedSource.toLowerCase(),
     },
   });
 
@@ -40,38 +48,57 @@ const Home = () => {
     fetchSearchResults(value);
   };
 
-  const submit = (e) => {
+  const submit = () => {
     getNews();
   };
 
   const handleCategoryChange = (category) => {
-    setSelectedCategory(
-      (prevCategories) =>
-        prevCategories.includes(category)
-          ? prevCategories.filter((c) => c !== category) // Remove if already selected
-          : [...prevCategories, category] // Add if not selected
-    );
+    setSelectedCategory(category);
+    setSelectedSource("");
+    setTimeout(() => {
+      getNews();
+    }, 500);
   };
 
   const handleFilterChange = () => {
-    getNews();
-    // let filtered = dummyData.filter((item) => {
-    //   return (
-    //     (selectedDate === "All" || item.date.includes(selectedDate)) &&
-    //     (selectedCategory.length === 0 ||
-    //       selectedCategory.includes(item.category)) &&
-    //     (selectedSource === "All" || item.source === selectedSource)
-    //   );
-    // });
-    // setFilteredData(filtered);
+    setSelectedCategory("");
+    setTimeout(() => {
+      getNews();
+    }, 500);
   };
+
+  const handleFromDateChange = (date) => {
+    setFromDate(date);
+    if (toDate && date > toDate) {
+      setFromDate(null);
+    }
+  };
+
+  const handleToDateChange = (date) => {
+    setToDate(date);
+    if (fromDate && date < fromDate) {
+      setToDate(null);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (fromDate && toDate && fromDate <= toDate) {
+        getNews();
+      }
+    };
+
+    fetchData();
+  }, [fromDate, toDate]);
+
+  console.log("toDatetoDatetoDate", toDate);
 
   return (
     <div className="search-page">
       <h1
         style={{
           fontSize: "54px",
-          lineHeight: "54px", // Adjusted for better readability
+          lineHeight: "54px",
           color: "black",
           fontWeight: 700,
           paddingBottom: "5%",
@@ -95,40 +122,43 @@ const Home = () => {
       <div className="content">
         {/* Left Side Filters */}
         <div className="filters">
-          {/* Date Filter */}
-          <div>
-            <h4 className="hedingStyle">Date Filter</h4>
-            {dateList.map((date, index) => (
-              <label key={index} className="d-block">
-                <input
-                  type="radio"
-                  value={date.value}
-                  checked={selectedDate === date.value}
-                  onChange={() => {
-                    setSelectedDate(date?.value);
-                    handleFilterChange();
-                  }}
-                  style={{ marginInline: 5 }}
-                />
+        <h4 className="headingStyle">Date Filter</h4>
 
-                {date?.label}
-              </label>
-            ))}
+          <div className="date-filter-container">
+            <div className="date-input-group">
+              <div className="date-input">
+                <label htmlFor="fromDate">From:</label>
+                <DatePicker
+                  selected={fromDate}
+                  onChange={handleFromDateChange}
+                  dateFormat="dd-MM-yyyy"
+                  minDate={getPreviousMonthDate()} // Disable past dates
+                />
+              </div>
+
+              <div className="date-input">
+                <label htmlFor="toDate">To:</label>
+                <DatePicker
+                  selected={toDate}
+                  onChange={handleToDateChange}
+                  dateFormat="dd-MM-yyyy"
+                  minDate={fromDate} // Disable dates before 'fromDate'
+                />
+              </div>
+            </div>
           </div>
 
           {/* Category Filter */}
-          {/* Category Filter */}
           <div>
-            <h4 className="hedingStyle">Category</h4>
+            <h4 className="headingStyle">Category</h4>
             {categoryList.map((category, index) => (
               <label key={index} className="d-block">
                 <input
-                  type="checkbox"
+                  type="radio"
                   value={category}
-                  checked={selectedCategory.includes(category)}
+                  checked={selectedCategory === category}
                   onChange={() => {
                     handleCategoryChange(category);
-                    handleFilterChange();
                   }}
                   style={{ marginInline: 5 }}
                 />
@@ -139,8 +169,8 @@ const Home = () => {
 
           {/* Source Filter */}
           <div>
-            <h4 className="hedingStyle">Source</h4>
-            {["All", "BBC", "CNN", "ESPN"].map((source, index) => (
+            <h4 className="headingStyle">Source</h4>
+            {sourcesList.map((source, index) => (
               <label key={index} className="d-block">
                 <input
                   type="radio"
@@ -152,7 +182,6 @@ const Home = () => {
                   }}
                   style={{ marginInline: 5 }}
                 />
-
                 {source}
               </label>
             ))}
@@ -162,7 +191,7 @@ const Home = () => {
         {/* Right Side - News Column */}
         <div className="news-column">
           {newsData?.length > 0 ? (
-            newsData?.map((item, index) => (
+            newsData.map((item, index) => (
               <NewsItems item={item} key={index.toString()} />
             ))
           ) : (

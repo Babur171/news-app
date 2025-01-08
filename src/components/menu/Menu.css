@@ -1,0 +1,90 @@
+/* Menu Styles */
+.menu {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #f8f9fa;
+	padding: 10px 0;
+	margin-bottom: 20px;
+	position: relative;
+  }
+  
+  .menu ul {
+	list-style: none;
+	display: flex;
+	gap: 20px;
+	padding: 0;
+	margin: 0;
+  }
+  
+  .menu li {
+	padding: 10px 20px;
+	border-radius: 20px;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: 600;
+	transition: all 0.3s ease;
+  }
+  
+  .menu li.inactive {
+	background-color: #e9ecef;
+	color: #495057;
+  }
+  
+  .menu li.active {
+	background-color: #aeb0b3e0;
+  }
+  
+  .menu li:hover {
+	transform: scale(1.1);
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+	.menu ul {
+	  flex-direction: column; /* Stack items vertically */
+	  gap: 15px;
+	  padding: 0;
+	  margin: 0;
+	  display: none; /* Initially hide the menu */
+	  position: absolute;
+	  top: 60px; /* Position the menu below the navbar */
+	  left: 0;
+	  width: 100%;
+	  background-color: #f8f9fa;
+	  padding: 10px 0;
+	}
+  
+	.menu.active ul {
+	  display: flex; /* Show the menu when active */
+	}
+  
+	.menu li {
+	  font-size: 14px;
+	  padding: 8px 15px;
+	}
+  
+	/* Menu Button */
+	.menu-button {
+	  display: block;
+	  cursor: pointer;
+	  font-size: 24px;
+	  position: absolute;
+	  top: 15px;
+	  right: 20px; /* Position the button at the top-right */
+	}
+  }
+  
+  @media (min-width: 769px) {
+	.menu-button {
+	  display: none; /* Hide the hamburger menu on larger screens */
+	}
+  }
+  
+  @media (max-width: 480px) {
+	.menu li {
+	  font-size: 12px;
+	  padding: 6px 10px;
+	}
+  }
+  

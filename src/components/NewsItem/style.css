@@ -1,8 +1,11 @@
-body {
-  font-family: Arial, sans-serif;
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
 }
 
 .news-card {
@@ -11,27 +14,28 @@ body {
   gap: 20px;
   padding: 15px;
   border-bottom: 1px solid #ddd;
+  max-width: 1000px;
 }
 
 .newHeading {
-  padding-bottom: 8;
-  font-family: "font-family-primary-fancy";
-  font-size: 17;
+  padding-bottom: 8px;
+  font-family: Arial, sans-serif;
+  font-size: 17px;
   font-weight: 700;
-  text-decoration: "none";
+  text-decoration: none;
 }
+
 .descriptionNews {
-  font-family: "owners";
+  font-family: Arial, sans-serif;
   font-size: 1.2rem;
-  line-height: 1.3125rem;
-  display: -webkit-box; /* Use a flexible box for layout */
-  -webkit-box-orient: vertical; /* Set the box orientation to vertical */
-  overflow: hidden; /* Hide overflow content */
-  text-overflow: ellipsis; /* Add ellipsis for overflow text */
-  -webkit-line-clamp: 3; /* Limit text to 3 lines */
-  line-height: 1.5; /* Adjust line height (optional) */
-  max-height: calc(1.5em * 3);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
 }
+
 .news-card img {
   max-width: 177px;
   height: 128px;
@@ -44,14 +48,13 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  flex: 1;
+  /* flex: 1; */
 }
 
-.news-meta,
-span {
-  display: flex;
-  justify-content: flex-start;
-  gap: 10px;
+.news-meta  {
+  /* display: flex; */
+  /* justify-content: flex-start; */
+  /* gap: 10px; */
   font-size: 14px;
   color: rgb(140, 140, 140);
   font-family: monospace;
@@ -60,23 +63,6 @@ span {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-  .news-card {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .news-card img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  .news-meta {
-    justify-content: center;
-  }
-}
-
 @media (max-width: 768px) {
   .news-card {
     flex-direction: column;
@@ -89,25 +75,5 @@ span {
     height: auto;
   }
 
-  .news-meta {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .news-card {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 10px;
-  }
-
-  .news-card img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  .news-meta {
-    justify-content: center;
-  }
+  
 }

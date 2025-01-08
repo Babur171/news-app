@@ -1,9 +1,9 @@
-import { guardianInstance, newsAPIInstance, openNewsInstance } from "./config";
+import { guardianInstance, newsAPIInstance } from "./config";
 
 export const fetchArticles = async ({ query = "", filters = {} }) => {
   try {
     const apiKeys = {
-      newsAPI: "6f1dc3d58418487a8d9ea0a45ae963be" || "",
+      newsAPI: "89a1860ec42b49a5839fb8aceb4c7d6d" || "",
       openNews: "d7bf5c4c-f6ac-4248-8d78-5de8af178963" || "",
       guardian: "d7bf5c4c-f6ac-4248-8d78-5de8af178963" || "",
     };
@@ -26,7 +26,8 @@ export const fetchArticles = async ({ query = "", filters = {} }) => {
     const newsAPIParams = buildQueryParams({
       q: query,
       ...filters,
-      pageSize: 10, // Specify page size or fetch limit
+      sortBy: "publishedAt",
+      pageSize: 20, // Specify page size or fetch limit
       apiKey: apiKeys.newsAPI, // Add NewsAPI key
     });
 
@@ -38,26 +39,40 @@ export const fetchArticles = async ({ query = "", filters = {} }) => {
 
     const guardianParams = buildQueryParams({
       q: query,
-      ...filters,
-      "api-key": apiKeys.guardian, // Add Guardian API key (uses "api-key" key format)
+      "from-date": filters.from,
+      "from-to": filters.to,
+      sources: filters.sources,
+      "show-sections": true,
+      "api-key": apiKeys.guardian,
     });
 
-    // Concurrently fetch articles from all APIs
-    const [newsAPI, guardian] = await Promise.all([
-      newsAPIInstance.get(`/everything?${newsAPIParams}`),
-      guardianInstance.get(`/search?${guardianParams}`),
-      // openNewsInstance.get(`/articles?${openNewsParams}`),
+    // Concurrently fetch articles from all APIs using Promise.allSettled
+    const [newsAPIResult, guardianResult] = await Promise.allSettled([
+      newsAPIInstance.get(`/top-headlines?${newsAPIParams}`),
+      guardianInstance.get(
+        `/${
+          filters.category
+            ? filters.category === "sports"
+              ? "sport"
+              : filters.category
+            : "technology"
+        }?${guardianParams}`
+      ),
     ]);
-    console.log("guardianguardian", guardian);
 
-    // Combine and return the results
-    return [
-      ...(newsAPI.data?.articles || []),
-      ...(guardian.data?.response?.results || []),
-      // ...(openNews.data?.articles || []),
-    ];
+    // Extract successful results and combine them
+    const articles = [];
+    if (newsAPIResult.status === "fulfilled") {
+      articles.push(...(newsAPIResult.value.data?.articles || []));
+    }
+
+    // Check if guardianResult was successful
+    if (guardianResult.status === "fulfilled") {
+      articles.push(...(guardianResult.value.data?.response?.results || []));
+    }
+
+    return articles;
   } catch (error) {
-    console.error("Error fetching articles:", error);
     return [];
   }
 };
